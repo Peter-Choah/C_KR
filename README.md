@@ -1,2 +1,3 @@
-# C-K-R
-K&amp;R Exercises
+# C Language -> K&R
+
+K&R exercises completed with my source code.
