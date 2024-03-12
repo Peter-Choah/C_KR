@@ -1,4 +1,4 @@
-Hello this is sample text
+Hello this is sample text extending this line to be much longer than normal input to see how this fares under some other programs.
 Lor\nem Ipsum
 \tDolores
    What else?
@@ -12,4 +12,4 @@ should be hello wordl
 tabs? "\t" tabs?
 echo -e '12\t34\thello\tword2\tn' | ./main
 
-1   2\t34\thel  lo\tword    2 \tn 10spaces
+1   2\t34\thel  lo\tword    2 \tn 10spaces hmm some missing characters
