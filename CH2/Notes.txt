@@ -1,0 +1,12 @@
+# Types, Operators, and Expressions
+
+## 2.1 Variable Names
+Similar to many other programming languages.
+- Start with alpha or underscore
+- Case-sensitive
+- Cannot use reserved keywords Limit to 31 characters as different compilers may have limits on names especially for functions and external variables.
+
+## 2.2 Data Types and Sizes
+Primitive Types
+char, int, float, double
+
