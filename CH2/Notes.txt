@@ -10,3 +10,120 @@ Similar to many other programming languages.
 Primitive Types
 char, int, float, double
 
+## 2.3 Constants
+
+Constants are weird in C.
+Int constansts can be suffixed by U for unsigned or L for long. They can be combined and are case-insensitive.
+
+Int constants can also be octal (with a leading 0) and hexadecimal (with a leading 0x) constants.
+Let decimal = 31:
+octal = 037
+hexadecimal = 0x1f / 0X1F
+
+Float constants are tyep Double and are suffixed by 'f' or 'F'. A suffix of L indicates it to be a Long Double.
+
+Character constants is the numeric value of the character in the machine's character set, '0' = 48 in ASCII.
+
+Arbitrary byte-sized bit pattern can be specified by 
+  '\ooo'
+where ooo is one to three octal digits or by
+  '\xhh'
+where hh is one or more hexadecimal digits.
+#### E.g
+For octal:
+#define VTAB '\013'
+#define BELL '\007'
+
+For hexadecimal:
+#define VTAB '\xb'
+#define BELL '\x7'
+
+'\0' or nul character, has the character value of 0 as well.
+
+Constant expressions (involves only constants) are evaluated in compile time. 
+Examples are:
+- #define statements 
+- array size allocations, char line[MAXLINE+1]
+- string literals/constants, "Am String", ""
+
+##### Strings can be concatenated at compile time
+
+### Enums
+Enumeration constant is a list of constant integer values.
+
+enum boolean { NO, YES };
+enum escapes { BELL = '\a', BACKSPACE = '\b', TAB = '\t'};
+// note that enums continue progression from last specified value
+enum months { JAN = 1, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC}
+
+## 2.4 Declarations
+All variables must be declared before use.
+
+Declarations != initialisation.
+
+## 2.5 Arithmetic Operators
++, -, *, /, %
+
+% operator cannot be applied to float or double!
+
+Direction of truncation for / and the sign for % are machine-dependent for negative operands, similar for action taken on overflow or underflow.
+
+## 2.6 Relational and Logical Operators
+Relational operators are >, >=, <, <= with the same precedences.
+
+Just below them in precedence are equality operators: ==, !=
+
+Relational operators have lower precedence than arithmetic operators.
+  i < lim-1, is equal to, i < (lim-1)
+
+Logical operators are like && and ||.
+Expressions connected by && or || are evaluated left to right, and evaluation stops as soon as the truth or falsehood of the result is known.
+
+  // getline() function
+  for (i=0; i<lim-1 && (c=getchar()) != '\n' && c != EOF; ++i)
+    s[i] = c;
+
+Before reading a new character, it is necessary to check for room to store in array s, so the test i < lim-1 must be made first.
+
+Note, if the test fails, the functions must not go on and read another character. Similarly, it c shoudln't be tested against EOF before getchar is called. Thus, the left-to-right evaluation of these logical operators are kinda important.
+
+
+The numeric value of a relational or logical expression is 1 if true or 0 if false.
+
+## Type Conversions
+Automatic conversions are usually those that convert a "narrower" operand into a "wider one" that doesn't lose information. Happens with float + int.
+
+Expressions that don't make sense such as using a float as a subscript are disallowed.
+
+Expressions that lose information like (long) shortint may draw a warning but are not illegal.
+
+Conversion of chars to integers are tricky. The language doesn't specify whether variables of type char are signed or unsigned quantities.
+
+Different machines can produce a negative integer depending on the architecture.
+On some machines, a char whose leftmost bit is 1 will be converted to a negative integer ("sign extension"). On others, a char is promoted to an int by adding zeros at the end and is always positive.
+
+C guarantees that any character in the machine's standard printing character set will never be negative, so they will always be postive quantities in expressions. But arbitrary bit patterns stored in character variables may appear to be negative on some machines, yet positive on others.
+For portability, specify signed or unsigned if non-character data is to be stored in char variables.
+
+Usually, implicit arithmetic conversions work; "lower" types are automatically converted converted into "higher" types. An exception are floats in an expression which are not automatically converted to double. The main reason is that float saves storage in large arrays, or time on machines where double-precision is particularly expensive.
+
+Conversion becomes more complicated when unsigned operands are involved.
+  -1L < 1U, when 1U is promoted to signed long
+  -1L > 1UL, because -1L is promoted to unsigned long becomes a large positive number based on its bits.
+The rules for comparison is then machine-dependent.
+
+Let x = float, i = int, d = double 
+if x = i // float gets truncated to int
+if d = x // value gets rounded or truncated depending on implementation
+
+An argument of a function call is also an expression, thus type conversions also take place when they are passed to functions.
+
+Explicit type conversions can be forced ("coerced") in any expression, with a unary operator called a cast.
+  (type-name) expression
+
+Arguments for functions are automatically coerced due to the function prototype.
+
+## 2.8 Increment and Decrement Operators
+
+
+
