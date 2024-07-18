@@ -164,6 +164,34 @@ Right shifting, >>, fills *unsigned* quantity with zeros. *signed* quantities wi
 
 Unary operator, ~, flips all bits.
 
+## 2.10 Assignment Operators and Expressions
 
++ - * / % << >> & ^ |
+Each of these operators can be prepended to an = sign to become an assignment operator.
 
+Example usage to count bits:
+  for (b = 0; x != 0; x >>= 1)
+    if (x & 01)
+      b++;
+
+## 2.11 Conditional Expressions
+
+Conditional expressions:
+  (n > 0) ? f : n  // if n > 0, then f, else n
+is converted to float even if n is an int
+
+  for (i = 0; i < n; i++)
+    printf("%6d%c", a[i], (i%10==9 || i==n-1) ? '\n' : ' ');
+
+## 2.12 Precedence and Order of Evaluation
+Check the table if you need to verify something.
+
+Operands are not evaluated with specific order so be careful.
+Function calls, nested assignment statements, and increment and decrement operators cause "side effects".
+E.g.
+  a[i] = i++; // Is the subscript the old value of i or the new?
+
+Compilers can interpret this in different ways and generate different answers.
+
+The non-specificity in this is intentional. The precedence is left to the discretion of the compiler, since the best order depends strongly on machine architecture.
 

@@ -13,8 +13,8 @@ void printBits(unsigned int num) {
 }
 
 int setbits(int x, int p, int n, int y);
-
 int main(int argc, char *argv[]) {
+
   int x, p, n, y;
 
   x = 7;
