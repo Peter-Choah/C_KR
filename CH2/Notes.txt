@@ -124,6 +124,46 @@ Explicit type conversions can be forced ("coerced") in any expression, with a un
 Arguments for functions are automatically coerced due to the function prototype.
 
 ## 2.8 Increment and Decrement Operators
+++n and n++ are different on when the variable is used.
+
+If n is 5, then
+
+  x = n++; // sets x to 5, but
+  x = ++n; // sets x to 6
+
+n becomes 6 in the end. It's only legal to use ++/-- on variables
+
+## 2.9 Bitwise Operators
+Only applied to **integral operands**: char, short, int, and long. Signed or unsigned.
+Mostly like logic gates
+
+- & bitwise AND
+- | bitwise inclusive OR
+- ^ bitwise exclusive OR
+- <<  left shift
+- >>  right shift
+- ~ one's complement (unary)
+
+& is often used to mask off some set of bits
+  n = n & 0177;
+This sets 0 to all but the low-order 7 bits of n. The number above is octal btw.
+
+| is used to turn bits on:
+   x = x | SET_ON;
+All the in x are set to 1 according to SET_ON
+
+^ sets 1 if the numbers are not the same, or 0 otherwise.
+  0011
+^ 0101
+  0110
+
+For << and >>, they are given a positive number of bit positions like this:
+  x << 2, shifts value of x by two bits left
+
+Right shifting, >>, fills *unsigned* quantity with zeros. *signed* quantities will fill with sign bits ("arithmetic shift") or 0-bits ("logical shift") depending on machine.
+
+Unary operator, ~, flips all bits.
+
 
 
 
