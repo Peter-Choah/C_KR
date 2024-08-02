@@ -92,3 +92,57 @@ void reverse(char s[])
 
 Commas that separate function arguments, variables in declarations, etc, are not comma operators and do not guarantee left to right evaluation.
 
+## 3.6 Do While
+
+Do while loops differs from the others by testing *after* making each pass through the loop body.
+Thus, it is always executed at least once.
+
+Syntax:
+  do
+    statement
+  while (expression);
+See exercise 3.3c for an example of a do while loop.
+  ^ necessary as it needs to print something eventhough it could be a 0 value.
+
+## 3.7 Break and Continue
+
+Break causes the innermost enclosing loop or switch to be exited immediately.
+
+Continue causes the next iteration of the enclosing for, while, or do loop to begin.
+In while and do, this means that the test part is executed immediately.
+In for, control passes to the increment step.
+Doesn't affect switch.
+
+## Goto and Labels
+
+Goto can break out of two or more loops at once.
+
+for ( ... )
+  for ( ... ) {
+      ...
+      if (disaster)
+        goto error;
+  }
+...
+
+error:
+  clean up the mess
+
+Kinda handy if the error-handling code is non-trivial and if errors can occur in several places.
+
+A label has the same form as a variable name, and is followed by a colon.
+It can be attached to any statement in the same function as the goto. The scope ofa label is the entire function.
+
+Another example of determining whether two arrays a and b have an element in commonL
+
+    for (i = 0; i < n; i++)
+      for (j = 0; j < m; j++)
+        if (a[i] == b[j])
+          goto found;
+    /* didn't find any common element */
+    ...
+  found:
+    /* got one: a[i] == b[j] */
+    ...
+
+
