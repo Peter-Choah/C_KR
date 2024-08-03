@@ -133,7 +133,7 @@ Kinda handy if the error-handling code is non-trivial and if errors can occur in
 A label has the same form as a variable name, and is followed by a colon.
 It can be attached to any statement in the same function as the goto. The scope ofa label is the entire function.
 
-Another example of determining whether two arrays a and b have an element in commonL
+Another example of determining whether two arrays a and b have an element in common.
 
     for (i = 0; i < n; i++)
       for (j = 0; j < m; j++)
@@ -145,4 +145,18 @@ Another example of determining whether two arrays a and b have an element in com
     /* got one: a[i] == b[j] */
     ...
 
+Code involving goto can always be rewritten without one maybe at the cost of some repeated tests or an extra variable.
 
+  found = 0;
+  for (i = 0; i < n && !found; i++)
+    for (j = 0; j < m && !found j++)
+      if (a[i] == b[j])
+        found = 1;
+  if (found)
+    /* got one: a[i-1] == b[j-1] */
+    ...
+  else
+    /* didn't find any common element */
+    ...
+
+Don't use goto if possible. It makes you look around the entire codebase.
