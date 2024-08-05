@@ -43,3 +43,19 @@ compiles the 3 files, placing the resulting object code in files main.o getline.
 The cc command uses the ".c" versus ".o" naming convention to distinguish source files from object files.
 
 
+## 4.2 Functions Returning Non-integers
+
+We know that function argument and return types are defined in function declarations/prototypes. Compilers can check if there are inconsistent types between functions in the same source file. However, they are not able to detect this error if the function is compiled from a different source file.
+
+The reason this mismatch can happen is that if there is no function prototype, a function is implicitly declared by its first appearance in an expression, such as 
+  sum += atof(line)
+
+If a name that has not been previously declared occurs in an expression and is followed by a left parenthesis, it is declared by context to be a function name, the function is assumed to return an int, and nothing is assumed about its arguments.
+
+E.g
+  double atof();
+This is taken that nothing is to be assumed about the arguments of atof; all parameter checking is turned off. Don't do this. 
+
+If there are no arguments, use void.
+
+
