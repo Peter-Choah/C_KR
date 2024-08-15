@@ -47,7 +47,7 @@ double atof(char s[]) {
     if (s[i] == '+' || s[i] == '-')
       i++;
     for (exponent = 0; isdigit(s[i]); i++) {
-      exponent = 10 * val + (s[i] - '0');
+      exponent = 10 * exponent + (s[i] - '0');
     }
   }
 
@@ -60,12 +60,15 @@ double atof(char s[]) {
   }
 }
 
-/* Converts float to engneering notation */
+/* Converts float to engneering notation assuming that the value is > 0 */
 void ftoa(char t[], double val) {
-  int i, j;
+  int i, j, sign;
 
   int exponent = 0;
 
+  if (val < 0) {
+    sign = -1;
+  }
   // Get val less than 1000 and add to exponent
   while (val > 1000) {
     exponent += 3;
@@ -74,12 +77,13 @@ void ftoa(char t[], double val) {
 }
 
 double pow(double x, double y) {
+  double num = x;
   if (y < 1) {
     return 1;
   }
   while (y > 1) {
-    x *= x;
+    num *= x;
     y--;
   }
-  return x;
+  return num;
 }
