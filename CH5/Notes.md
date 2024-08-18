@@ -200,4 +200,130 @@ An example with a simple storage allocator. alloc(n), returns a pointer p to n-c
 
 The easiest implementation is to have alloc hand out pieces of a large character array, allocbuf. This array is private to alloc and afree. Since they deal in pointers, not array indices, no other routine needs to know the name of the array, which can be declared static in the source file containing alloc and afree, and is thus invisible outside it. The array may not even have a name and be instead be obtained by calling malloc or by asking the operating system for a pointer to some unnamed block of storage.
 
+The other information needed is how much of allocbuf has been used. We can use a pointer, called allocp, that points to the next free element. When alloc is asked for n characters, it checks to see if there is enough room left in allocbuf. If so, it returns the current value of allocp and increments it to the next free area. If there is no room, alloc returns zero or something appropriate. afree(p) just sets allocp to p if p is inside allocbuf.
 
+  *** See simple_alloc.c
+
+In general, a pointer can be initialized just as any other variable can, though normally the only meaningful values are 0 or an expression involving the addresses of previously defined data of appropriate type.
+```
+  static char *allocp = allocbuf;
+```
+The statement defines allocp to be a character pointer and initializes it to point to the beginning of allocbuf, which is the next free position when the program starts.
+It could also be written this way since the array name is the address of the 0th element.
+```
+  static char *allocp = &allocbuf[0];
+```
+
+0 is never a valid address for data, so a return value of 0 can be used to signal an abnormal event.
+
+Pointers and integers are not interchangeable. Zero is the only exception: the constant zero may be assigned to a pointer, and a pointer may be compared with the constant zero. The symbolic constant NULL is often used in place of zero, as a mnemonic to indicate more clearly that this is a special value for a pointer. NULL is defined in <stdio.h>.
+
+Tests like
+```
+  if (allocbuf + ALLOCSIZE - allocp >= n )
+
+  if (p >= allocbuf && p < allocbuf + ALLOCSIZE)
+```
+These tests show that pointers can be compared under certain circumstances. If p and q point to members of the same array, then relations like ==, !=, <, >=, etc., work properly. 
+Let p < q, (both pointers to the array)
+It is true if p points to an earlier member of the array than q does. Any pointer can be meaningfully compared for equality or inequality with zero. But the behaviour is undefined for arithmetic or comparisons with pointers that do not point to members of the same array. (One exceptions being: the address of the first element past the end of an array can be used in pointer arithmetic.)
+
+Another point about pointers is that a pointer and an integer may be added or subtracted. It is true regardless of the kind of object p points to; the added integer is scaled to the size of the object p points to. If an int is four bytes, the int will be scaled by four.
+
+Pointer arithmetic is consistent: if we had been dealing with floats, which occupy more storage than chars, and if p were a pointer to float, p++ would advance to the next float. Thus, we can write another version of alloc that maintains floats instead of chars by simply changing char to float throughout alloc and afree. All pointer manipulations automatically take into account the size of object pointed to.
+
+The valid pointer operations are assignment of pointers of the same type, adding or subtracting a pointer and an integer, subtracting or comparing two pointers to members of the same array, and assigning or comparing to zero. 
+Any other pointer arithmetic is illegal: adding 2 pointers, multiply, divide, shift, mask, or add float or double, and (except for void *), assign a pointer of one type to a pointer of another type without a cast.
+
+## 5.5 Character Pointers and Functions
+
+A string constant, "I am a string" is an array of characters. In the internal representation, the array is terminated with NUL. The length in storage is 1 more than the num of characters.
+```
+  printf("hello, world\n");
+```
+When a character string like this appears, access to it is through a character pointer; printf receives a pointer to the beginning of the character array.
+```
+  char *pmessage;
+  pmessage = "now is the time";
+```
+This code block assigns to pmessage a pointer to the character array. This is not a string copy; only pointers are involved. C does not provide any operators for processing an entire string of characters as a unit.
+```
+  char amessage[] = "now is the time"; /* an array */
+  char *pmessage = "now is the time"; /* a pointer */
+```
+Take note that there are differences between the two. amessage is an array, just big enough to hold the sequence of characters and '\0' that initializes it. Individual characters within the array may be changed but amessage will always refer to the same storage.
+pmessage is a pointer, initialized to point to a string constant; the pointer may subsequently be modified to point elsewhere, but the result is undefined if you try to modify the string contents.
+
+strcpy(s,t), is a function from the standard library which copies string t to string s. To copy the characters, we need a loop.
+```
+/* strcpy: array subscript version */
+void strcpy(char *s, char *t)
+{
+  int i;
+
+  i = 0;
+  while ((s[i] = t[i]) != '\0')
+    i++;
+}
+
+/* strcpy: pointer version 1 */
+void strcpy(char *s, char *t)
+{
+  while ((*s = *t) != '\0') {
+    s++;
+    t++;
+  }
+}
+```
+Because arguments are passed by value, strcpy can use the parameters s and t in any way it pleases.
+```
+/* strcpy: pointer version 2 */
+void strcpy(char *s, char *t)
+{
+  while ((*s++ = *t++) != '\0')
+    ;
+}
+```
+This moves the increment of s and t into the test part of the loop. The value of *t++ is the character that t pointed to before t was incremented; the postfix ++ doesn't change t until after this character has been fetched. In the same way, the character is stored into the old s position before s is incremented. This value is also the value that is compared against '\0' to control the loop. The net effect is that characters are copied from t to s, up to and including the terminating '\0'.
+
+For the final abbreviation, observe that a comparison against '\0' is redundant since the question is merely whether the expression is 0.
+```
+/* strcpy: pointer version 3 */
+void strcpy(char *s, char *t)
+{
+  while (*s++ = *t++)
+    ;
+}
+```
+This is cryptic, but the notational convenience is considerable, and is quite common in C programs.
+To note, the strcpy in <string.h> returns the target string as its function value.
+
+strcmp(s,t), which compares the character strings s and t, and returns negative, zero or positive if s is lexicographically less than, equal to, or greater than t. The value is obtained by subtracting the characters at the first position where s and t disagree.
+```
+/* strcmp: return <0 if s<t, 0 if s==t, >0 if s>t */
+int strcmp(char *s, char *t)
+{
+  int i;
+
+  for (i = 0; s[i] == t[i]; i++)
+    if (s[i] == '\0')
+      return 0;
+  return s[i] - t[i];
+}
+
+/* strcmp: pointer version */
+int strcmp(char *s, char *t)
+{
+  for ( ; *s == *t; s++, t++)
+    if (*s == '\0')
+      return 0;
+  return *s - *t;
+}
+```
+Common idioms using prefix or postfix operators:
+```
+  *p++ = val;   /* push val onto stack */
+  val = *--p;   /* pop top of stack into val */
+```
+
+## 5.6 Pointer Arrays; Pointers to Pointers
