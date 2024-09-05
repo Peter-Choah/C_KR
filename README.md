@@ -1,3 +1,4 @@
-# C Language -> K&R
+# Learning C from
+## The C Programming Language by Brian Kernighan and Dennis Ritchie
 
-K&R exercises completed with my source code.
+Notes and exercises completed.
